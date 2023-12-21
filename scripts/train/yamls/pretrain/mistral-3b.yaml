@@ -1,9 +1,9 @@
 data_local: ./my-copy-c4
-data_remote: s3://mcli-sukrit/data/c4-small-seq-1024
+data_remote: s3://mcli-sukrit/data/red-pyjama-sample-1b-seq-2048/
+context_length: 2048
 tokenizer_name: meta-llama/Llama-2-7b-hf
-max_seq_len: 1024
 global_seed: 42
-
+max_seq_len: ${context_length}
 # Run Name
 run_name: # If left blank, will be read from env var $RUN_NAME
 
@@ -20,7 +20,7 @@ model:
     num_attention_heads: 24
     num_hidden_layers: 24
     num_key_value_heads: 8
-    sliding_window: 512
+    sliding_window: 1024
 
     # WARNING: if setting `pretrained: true`, `max_position_embeddings` must match the
     # `max_position_embeddings` used during pre-training
@@ -96,7 +96,7 @@ precision: amp_bf16
 fsdp_config:
   sharding_strategy: FULL_SHARD
   mixed_precision: PURE
-  activation_checkpointing: false
+  activation_checkpointing: true
   activation_checkpointing_reentrant: false
   activation_cpu_offload: false
   limit_all_gathers: true
@@ -118,7 +118,7 @@ loggers:
   wandb: {}
 
 # Checkpoint to local filesystem or remote object store
-save_interval: 100ba
+save_interval: 50ba
 save_num_checkpoints_to_keep: 10  # Important, this cleans up checkpoints saved to DISK
 save_folder: s3://mcli-sukrit/runs/models/${run_name}/checkpoints
 # save_folder: ./local-ckpts
