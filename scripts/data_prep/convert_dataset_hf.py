@@ -192,7 +192,21 @@ c4constants.splits['val_xxsmall'] = DataSplitConstants(
     raw_samples=100,
     truncated_samples=100)
 
-CONSTS = {'c4': c4constants, 'the_pile': pileconstants}
+redconstants = DatasetConstants(
+    chars_per_sample=2163,  # Computed over validation set
+    chars_per_token=4  # OpenAI estimate
+)
+
+redconstants.splits['train'] = DataSplitConstants(hf_split='train',
+                                                  folder_split='train',
+                                                  raw_samples=364868892,
+                                                  truncated_samples=None)
+redconstants.splits['val'] = DataSplitConstants(hf_split='validation',
+                                                folder_split='val',
+                                                raw_samples=364608,
+                                                truncated_samples=None)
+
+CONSTS = {'c4': c4constants, 'the_pile': pileconstants, 'chats-bug/red-pyjama-sample-1T-max-chunk-16k': redconstants}
 
 
 def build_hf_dataset(
